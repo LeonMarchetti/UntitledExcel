@@ -7,9 +7,15 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Users/LeoAM/LIBS/JAVA/apache-poi/poi-3.17-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/LeoAM/LIBS/JAVA/jxls-jexcel/jxls-jexcel-1.0.6.jar">
+	<classpathentry kind="lib" path="C:/Users/LeoAM/LIBS/JAVA/apache-poi/poi-ooxml-3.17.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/LeoAM/LIBS/JAVA/jxls-jexcel/jxls-jexcel-1.0.6-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/LeoAM/LIBS/JAVA/apache-poi/poi-ooxml-3.17-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/LeoAM/LIBS/JAVA/xmlbeans/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/LeoAM/LIBS/JAVA/commons-collections4/commons-collections4-4.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/LeoAM/LIBS/JAVA/commons-collections4/commons-collections4-4.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="output" path="bin"/>

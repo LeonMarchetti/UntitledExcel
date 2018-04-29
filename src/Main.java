@@ -1,16 +1,17 @@
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Main {
 
@@ -22,10 +23,8 @@ public class Main {
     }
 
     public static void load(String fileLocation) {
-        FileInputStream file;
         try {
-            file = new FileInputStream(new File(fileLocation));
-            Workbook workbook = new HSSFWorkbook(file);
+            Workbook workbook = WorkbookFactory.create(new File(fileLocation));
 
             for (Sheet sheet : workbook) {
                 int rowNumber = 0;
@@ -79,11 +78,18 @@ public class Main {
                         cellNumber++;
                     }
                     rowNumber++;
+                    cells.add(thisRow);
                 }
             }
             workbook.close();
 
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncryptedDocumentException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
