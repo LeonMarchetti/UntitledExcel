@@ -34,6 +34,7 @@ public class Main {
                     List<Cell> thisRow = new ArrayList<Cell>();
                     int cellNumber = 0;
                     for (Cell cell : row) {
+                        thisRow.add(cell);
                         System.out.printf("\tCelda %d: ", cellNumber);
                         switch (cell.getCellTypeEnum()) {
                             case BLANK:
