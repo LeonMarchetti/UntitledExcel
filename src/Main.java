@@ -20,15 +20,15 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class Main {
 
     public static void main(String[] args) {
-        // load("workbooks/Untitled1.xls");
+        load("workbooks/Untitled1.xls");
         save("workbooks/Workbook.xls");
     }
 
     public static void load(String archivo) {
         try {
-            Workbook planilla = WorkbookFactory.create(new File(archivo));
+            Workbook libro = WorkbookFactory.create(new File(archivo));
 
-            for (Sheet hoja : planilla) {
+            for (Sheet hoja : libro) {
                 int numFila = 0;
                 for (Row fila : hoja) {
                     System.out.printf("Fila %d\n", numFila);
@@ -36,51 +36,51 @@ public class Main {
                     for (Cell celda : fila) {
                         System.out.printf("\tCelda %d: ", numCelda);
                         switch (celda.getCellTypeEnum()) {
-                        case BLANK:
-                            System.out.printf("<vacío>\n");
-                            break;
-                        case BOOLEAN:
-                            boolean valor = celda.getBooleanCellValue();
-                            if (valor) {
-                                System.out.printf("<True>\n");
-                            } else {
-                                System.out.printf("<False>\n");
-                            }
-                            break;
-                        case ERROR:
-                            Byte error = celda.getErrorCellValue();
-                            System.out.printf("Error: %d\n", error);
-                            break;
-                        case FORMULA:
-                            String formula = celda.getCellFormula();
-                            System.out.printf("%s\n", formula);
-                            break;
-                        case NUMERIC:
-                            if (DateUtil.isCellDateFormatted(celda)) {
-                                Date fecha = celda.getDateCellValue();
-                                System.out.printf("%s\n", fecha.toString());
-                            } else {
-                                double numero = celda.getNumericCellValue();
-                                System.out.printf("%f\n", numero);
-                            }
-                            break;
-                        case STRING:
-                            String texto = celda.getStringCellValue();
-                            System.out.printf("%s\n", texto);
-                            break;
-                        case _NONE:
-                            System.out.printf("<none>\n");
-                            break;
-                        default:
-                            System.out.printf("<default>\n");
-                            break;
+                            case BLANK:
+                                System.out.printf("<vacío>\n");
+                                break;
+                            case BOOLEAN:
+                                boolean valor = celda.getBooleanCellValue();
+                                if (valor) {
+                                    System.out.printf("<True>\n");
+                                } else {
+                                    System.out.printf("<False>\n");
+                                }
+                                break;
+                            case ERROR:
+                                Byte error = celda.getErrorCellValue();
+                                System.out.printf("Error: %d\n", error);
+                                break;
+                            case FORMULA:
+                                String formula = celda.getCellFormula();
+                                System.out.printf("%s\n", formula);
+                                break;
+                            case NUMERIC:
+                                if (DateUtil.isCellDateFormatted(celda)) {
+                                    Date fecha = celda.getDateCellValue();
+                                    System.out.printf("%s\n", fecha.toString());
+                                } else {
+                                    double numero = celda.getNumericCellValue();
+                                    System.out.printf("%f\n", numero);
+                                }
+                                break;
+                            case STRING:
+                                String texto = celda.getStringCellValue();
+                                System.out.printf("%s\n", texto);
+                                break;
+                            case _NONE:
+                                System.out.printf("<none>\n");
+                                break;
+                            default:
+                                System.out.printf("<default>\n");
+                                break;
                         }
                         numCelda++;
                     }
                     numFila++;
                 }
             }
-            planilla.close();
+            libro.close();
 
         } catch (IOException |
                  EncryptedDocumentException |
@@ -91,20 +91,20 @@ public class Main {
     }
 
     public static void save(String archivo) {
-        Workbook planilla = new HSSFWorkbook();
-        Sheet hoja = planilla.createSheet("Hola mundo");
+        Workbook libro = new HSSFWorkbook();
+        Sheet hoja = libro.createSheet("Hola mundo");
 
-        Font fuente = planilla.createFont();
+        Font fuente = libro.createFont();
         fuente.setBold(true);
 
-        CellStyle estilo1 = planilla.createCellStyle();
+        CellStyle estilo1 = libro.createCellStyle();
         estilo1.setBorderBottom(BorderStyle.THIN);
         estilo1.setBorderLeft(BorderStyle.THIN);
         estilo1.setBorderRight(BorderStyle.THIN);
         estilo1.setBorderTop(BorderStyle.THIN);
         estilo1.setFont(fuente);
 
-        CellStyle estilo2 = planilla.createCellStyle();
+        CellStyle estilo2 = libro.createCellStyle();
         estilo2.setBorderBottom(BorderStyle.THIN);
         estilo2.setBorderLeft(BorderStyle.THIN);
         estilo2.setBorderRight(BorderStyle.THIN);
@@ -125,8 +125,8 @@ public class Main {
         }
 
         try {
-            planilla.write(new FileOutputStream(archivo));
-            planilla.close();
+            libro.write(new FileOutputStream(archivo));
+            libro.close();
         } catch (IOException e) {
             System.out.printf("%s\n", e.getMessage());
         }
