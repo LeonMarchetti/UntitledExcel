@@ -1,13 +1,17 @@
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.hssf.usermodel.HSSFDateUtil;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -15,87 +19,119 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 public class Main {
 
-    private static List<List<Cell>> cells = new ArrayList<List<Cell>>();
-
     public static void main(String[] args) {
-        load("workbooks/Untitled1.xls");
-        save("workbooks/Workbook1.xls");
+        // load("workbooks/Untitled1.xls");
+        save("workbooks/Workbook.xls");
     }
 
-    public static void load(String fileLocation) {
+    public static void load(String archivo) {
         try {
-            Workbook workbook = WorkbookFactory.create(new File(fileLocation));
+            Workbook planilla = WorkbookFactory.create(new File(archivo));
 
-            for (Sheet sheet : workbook) {
-                int rowNumber = 0;
-                for (Row row : sheet) {
-                    System.out.printf("Fila %d\n", rowNumber);
-                    List<Cell> thisRow = new ArrayList<Cell>();
-                    int cellNumber = 0;
-                    for (Cell cell : row) {
-                        thisRow.add(cell);
-                        System.out.printf("\tCelda %d: ", cellNumber);
-                        switch (cell.getCellTypeEnum()) {
-                            case BLANK:
-                                System.out.printf("<vacío>\n");
-                                break;
-                            case BOOLEAN:
-                                boolean valor = cell.getBooleanCellValue();
-                                if (valor) {
-                                    System.out.printf("<True>\n");
-                                } else {
-                                    System.out.printf("<False>\n");
-                                }
-                                break;
-                            case ERROR:
-                                Byte error = cell.getErrorCellValue();
-                                System.out.printf("Error: %d\n", error);
-                                break;
-                            case FORMULA:
-                                String formula = cell.getCellFormula();
-                                System.out.printf("%s\n", formula);
-                                break;
-                            case NUMERIC:
-                                if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                                    Date fecha = cell.getDateCellValue();
-                                    System.out.printf("%s\n", fecha.toString());
-                                } else {
-                                    double numero = cell.getNumericCellValue();
-                                    System.out.printf("%f\n", numero);
-                                }
-                                break;
-                            case STRING:
-                                String string = cell.getStringCellValue();
-                                System.out.printf("%s\n", string);
-                                break;
-                            case _NONE:
-                                System.out.printf("<none>\n");
-                                break;
-                            default:
-                                System.out.printf("<default>\n");
-                                break;
+            for (Sheet hoja : planilla) {
+                int numFila = 0;
+                for (Row fila : hoja) {
+                    System.out.printf("Fila %d\n", numFila);
+                    int numCelda = 0;
+                    for (Cell celda : fila) {
+                        System.out.printf("\tCelda %d: ", numCelda);
+                        switch (celda.getCellTypeEnum()) {
+                        case BLANK:
+                            System.out.printf("<vacío>\n");
+                            break;
+                        case BOOLEAN:
+                            boolean valor = celda.getBooleanCellValue();
+                            if (valor) {
+                                System.out.printf("<True>\n");
+                            } else {
+                                System.out.printf("<False>\n");
+                            }
+                            break;
+                        case ERROR:
+                            Byte error = celda.getErrorCellValue();
+                            System.out.printf("Error: %d\n", error);
+                            break;
+                        case FORMULA:
+                            String formula = celda.getCellFormula();
+                            System.out.printf("%s\n", formula);
+                            break;
+                        case NUMERIC:
+                            if (DateUtil.isCellDateFormatted(celda)) {
+                                Date fecha = celda.getDateCellValue();
+                                System.out.printf("%s\n", fecha.toString());
+                            } else {
+                                double numero = celda.getNumericCellValue();
+                                System.out.printf("%f\n", numero);
+                            }
+                            break;
+                        case STRING:
+                            String texto = celda.getStringCellValue();
+                            System.out.printf("%s\n", texto);
+                            break;
+                        case _NONE:
+                            System.out.printf("<none>\n");
+                            break;
+                        default:
+                            System.out.printf("<default>\n");
+                            break;
                         }
-                        cellNumber++;
+                        numCelda++;
                     }
-                    rowNumber++;
-                    cells.add(thisRow);
+                    numFila++;
                 }
             }
-            workbook.close();
+            planilla.close();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncryptedDocumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvalidFormatException e) {
-            // TODO Auto-generated catch block
+        } catch (IOException |
+                 EncryptedDocumentException |
+                 InvalidFormatException e) {
             e.printStackTrace();
         }
 
     }
 
-    public static void save(String fileLocation) {
+    public static void save(String archivo) {
+        Workbook planilla = new HSSFWorkbook();
+        Sheet hoja = planilla.createSheet("Hola mundo");
+
+        Font fuente = planilla.createFont();
+        fuente.setBold(true);
+
+        CellStyle estilo1 = planilla.createCellStyle();
+        estilo1.setBorderBottom(BorderStyle.THIN);
+        estilo1.setBorderLeft(BorderStyle.THIN);
+        estilo1.setBorderRight(BorderStyle.THIN);
+        estilo1.setBorderTop(BorderStyle.THIN);
+        estilo1.setFont(fuente);
+
+        CellStyle estilo2 = planilla.createCellStyle();
+        estilo2.setBorderBottom(BorderStyle.THIN);
+        estilo2.setBorderLeft(BorderStyle.THIN);
+        estilo2.setBorderRight(BorderStyle.THIN);
+        estilo2.setBorderTop(BorderStyle.THIN);
+        estilo2.setAlignment(HorizontalAlignment.CENTER);
+
+        for (int i = 1; i <= 10; i++) {
+            Row fila = hoja.createRow(i);
+            Cell celdaTitulo = fila.createCell(0);
+            celdaTitulo.setCellValue(String.format("Fila %d", i));
+            celdaTitulo.setCellStyle(estilo1);
+
+            for (int j = 1; j <= 10; j++) {
+                Cell celda = fila.createCell(j);
+                celda.setCellValue(i * j);
+                celda.setCellStyle(estilo2);
+            }
+        }
+
+        try {
+            planilla.write(new FileOutputStream(archivo));
+            planilla.close();
+        } catch (IOException e) {
+            System.out.printf("%s\n", e.getMessage());
+        }
+
+        System.out.printf("Terminado\n");
 
     }
 }
