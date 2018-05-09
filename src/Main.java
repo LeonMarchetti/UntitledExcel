@@ -16,15 +16,18 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class Main {
 
     public static void main(String[] args) {
-        load("workbooks/Untitled1.xls");
-        save("workbooks/Workbook.xls");
+        load("workbooks/libro1.xls");
+        saveH("workbooks/libro2.xls");
+        saveX("workbooks/libro3.xlsx");
     }
 
-    public static void load(String archivo) {
+    static void load(String archivo) {
+
         try {
             Workbook libro = WorkbookFactory.create(new File(archivo));
 
@@ -82,35 +85,44 @@ public class Main {
             }
             libro.close();
 
-        } catch (IOException |
-                 EncryptedDocumentException |
-                 InvalidFormatException e) {
+        } catch (EncryptedDocumentException |
+                 InvalidFormatException |
+                 IOException e) {
             e.printStackTrace();
+        } finally {
+            System.out.printf("load:\tTerminado\n\n");
         }
 
     }
 
-    public static void save(String archivo) {
-        Workbook libro = new HSSFWorkbook();
-        Sheet hoja = libro.createSheet("Hola mundo");
+    static void save(Workbook libro, String archivo) {
+        Sheet hoja = libro.createSheet("Hoja 1");
 
-        Font fuente = libro.createFont();
-        fuente.setBold(true);
+        // Estilos de celdas:
+        Font fuente1 = libro.createFont();
+        fuente1.setBold(true);
+        fuente1.setFontName("Liberation Mono");
 
         CellStyle estilo1 = libro.createCellStyle();
         estilo1.setBorderBottom(BorderStyle.THIN);
         estilo1.setBorderLeft(BorderStyle.THIN);
         estilo1.setBorderRight(BorderStyle.THIN);
         estilo1.setBorderTop(BorderStyle.THIN);
-        estilo1.setFont(fuente);
+        estilo1.setFont(fuente1);
+
+
+        Font fuente2 = libro.createFont();
+        fuente2.setFontName("Liberation Mono");
 
         CellStyle estilo2 = libro.createCellStyle();
+        estilo2.setAlignment(HorizontalAlignment.CENTER);
         estilo2.setBorderBottom(BorderStyle.THIN);
         estilo2.setBorderLeft(BorderStyle.THIN);
         estilo2.setBorderRight(BorderStyle.THIN);
         estilo2.setBorderTop(BorderStyle.THIN);
-        estilo2.setAlignment(HorizontalAlignment.CENTER);
+        estilo2.setFont(fuente2);
 
+        // Creo las celdas:
         for (int i = 1; i <= 10; i++) {
             Row fila = hoja.createRow(i);
             Cell celdaTitulo = fila.createCell(0);
@@ -124,14 +136,27 @@ public class Main {
             }
         }
 
+        // Ajusto el ancho de las columnas:
+        for (int i = 0; i <= 10; i++) {
+            hoja.autoSizeColumn(i);
+        }
+
         try {
             libro.write(new FileOutputStream(archivo));
             libro.close();
         } catch (IOException e) {
             System.out.printf("%s\n", e.getMessage());
         }
-
-        System.out.printf("Terminado\n");
-
     }
+
+    static void saveH(String archivo) {
+        save(new HSSFWorkbook(), archivo);
+        System.out.printf("saveH:\tTerminado\n\n");
+    }
+
+    static void saveX(String archivo) {
+        save(new XSSFWorkbook(), archivo);
+        System.out.printf("saveX:\tTerminado\n\n");
+    }
+
 }
